@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Stellantis | Control de Racks y Motores</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --azul: #071426;
+    --azul2: #12345a;
+    --gris: #64748b;
+    --fondo: #eef2f7;
+    --borde: #dce3ec;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fondo);
+    color: #172337;
+    padding: 30px 15px;
+}
+
+.contenedor {
+    max-width: 850px;
+    margin: auto;
+}
+
+.formulario {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.encabezado {
+    border-bottom: 3px solid var(--azul);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+}
+
+.marca {
+    color: var(--azul);
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.submarca {
+    color: var(--gris);
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+.titulo {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.titulo h1 {
+    font-size: 24px;
+    color: var(--azul);
+    letter-spacing: 0.5px;
+}
+
+.titulo p {
+    font-size: 12px;
+    color: var(--gris);
+    margin-top: 8px;
+}
+
+.seccion {
+    margin-top: 28px;
+}
+
+.seccion-titulo {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--azul);
+    border-left: 4px solid #1e5b96;
+    padding-left: 10px;
+    margin-bottom: 18px;
+}
+
+.campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #455468;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #1e5b96;
+}
+
+input[type="number"] {
+    font-size: 19px;
+    font-weight: bold;
+    color: var(--azul);
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+    opacity: 1;
+}
+
+.calidad {
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 20px;
+    background: #f8fafc;
+}
+
+.calidad-descripcion {
+    color: #536174;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.opciones {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.opcion {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.opcion input {
+    width: 18px;
+    height: 18px;
+    accent-color: #174f86;
+}
+
+.aprobado {
+    color: #16804a;
+}
+
+.no-aprobado {
+    color: #c03939;
+}
+
+.observaciones {
+    margin-top: 22px;
+}
+
+.observaciones textarea {
+    resize: vertical;
+    min-height: 75px;
+}
+
+.firmas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    margin-top: 45px;
+}
+
+.firma {
+    text-align: center;
+}
+
+.espacio-firma {
+    height: 85px;
+    border-bottom: 1px solid #263449;
+    margin-bottom: 12px;
+}
+
+.firma strong {
+    font-size: 12px;
+    color: var(--azul);
+}
+
+.firma p {
+    font-size: 10px;
+    color: var(--gris);
+    margin-top: 5px;
+}
+
+.pie {
+    border-top: 1px solid var(--borde);
+    margin-top: 35px;
+    padding-top: 15px;
+    text-align: center;
+    color: #8793a4;
+    font-size: 10px;
+}
+
+.acciones {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    padding: 13px 25px;
+    border-radius: 7px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-imprimir {
+    background: var(--azul);
+    color: white;
+}
+
+.btn-imprimir:hover {
+    background: #174f86;
+}
+
+.btn-limpiar {
+    background: white;
+    color: var(--azul);
+    border: 1px solid var(--borde);
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+/* IMPRESION */
+
+@page {
+    size: A4 portrait;
+    margin: 12mm;
+}
+
+@media print {
+
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .contenedor {
+        max-width: none;
+        width: 100%;
+    }
+
+    .formulario {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    .acciones {
+        display: none !important;
+    }
+
+    input,
+    textarea {
+        color: #172337 !important;
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .calidad {
+        background: #f8fafc !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .seccion,
+    .firmas {
+        break-inside: avoid;
+    }
+
+    .espacio-firma {
+        height: 85px;
+    }
+
+    input[type="radio"] {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    textarea {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .formulario {
+        padding: 22px 17px;
+    }
+
+    .campos,
+    .firmas {
+        grid-template-columns: 1fr;
+    }
+
+    .firmas {
+        gap: 25px;
+    }
+
+    .titulo h1 {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<div class="formulario">
+
+    <!-- ENCABEZADO -->
+
+    <div class="encabezado">
+
+        <div class="marca">STELLANTIS</div>
+        <div class="submarca">Control y seguimiento de expedición</div>
+
+        <div class="titulo">
+            <h1>CONTROL DE RACKS Y MOTORES</h1>
+            <p>Formulario de control y conformidad de carga</p>
+        </div>
+
+    </div>
+
+
+    <!-- DATOS DE CARGA -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            1. DATOS DE LA CARGA
+        </div>
+
+        <div class="campos">
+
+            <div class="campo">
+                <label>Fecha</label>
+                <input type="date" id="fecha">
+            </div>
+
+            <div class="campo">
+                <label>Destino</label>
+                <input type="text" id="destino"
+                       placeholder="Ingrese el destino">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CANTIDADES -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            2. CANTIDADES A DESPACHAR
+        </div>
+
+        <div class="campos">
+
+            <div class="campo">
+                <label>Cantidad total de racks</label>
+                <input type="number" id="racks"
+                       min="0" step="1" placeholder="0">
+            </div>
+
+            <div class="campo">
+                <label>Cantidad total de motores</label>
+                <input type="number" id="motores"
+                       min="0" step="1" placeholder="0">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CALIDAD DE EXPEDICION -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            3. APROBACIÓN DE CALIDAD DE EXPEDICIÓN
+        </div>
+
+        <div class="calidad">
+
+            <p class="calidad-descripcion">
+
+                El Área de Calidad de Expedición es el sector
+                responsable de verificar y controlar que los racks
+                y los motores se encuentren en condiciones adecuadas
+                antes de su despacho y transporte.
+
+            </p>
+
+            <div class="opciones">
+
+                <label class="opcion aprobado">
+                    <input type="radio"
+                           name="aprobacion"
+                           value="Aprobado">
+                    APROBADO
+                </label>
+
+                <label class="opcion no-aprobado">
+                    <input type="radio"
+                           name="aprobacion"
+                           value="No aprobado">
+                    NO APROBADO
+                </label>
+
+            </div>
+
+            <div class="campo observaciones">
+
+                <label>Observaciones (opcional)</label>
+
+                <textarea id="observaciones"
+                          placeholder="Indicar observaciones si corresponde..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FIRMAS -->
+
+    <div class="seccion">
+
+        <div class="seccion-titulo">
+            4. FIRMAS Y CONFORMIDAD
+        </div>
+
+        <div class="firmas">
+
+            <div class="firma">
+
+                <div class="espacio-firma"></div>
+
+                <strong>FIRMA DE QUIEN ENTREGA</strong>
+
+                <p>Nombre y firma</p>
+
+            </div>
+
+            <div class="firma">
+
+                <div class="espacio-firma"></div>
+
+                <strong>FIRMA DE QUIEN RECIBE</strong>
+
+                <p>Nombre y firma</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PIE -->
+
+    <div class="pie">
+
+        DOCUMENTO DE CONTROL DE CARGA
+        <br><br>
+        STELLANTIS
+
+    </div>
+
+</div>
+
+
+<!-- BOTONES -->
+
+<div class="acciones">
+
+    <button class="btn-imprimir" onclick="imprimirFormulario()">
+        IMPRIMIR FORMULARIO
+    </button>
+
+    <button class="btn-limpiar" onclick="limpiarFormulario()">
+        LIMPIAR FORMULARIO
+    </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+// Cargar fecha actual automáticamente
+
+function cargarFecha() {
+
+    const hoy = new Date();
+
+    const anio = hoy.getFullYear();
+
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+
+    const dia = String(hoy.getDate()).padStart(2, '0');
+
+    document.getElementById("fecha").value =
+        `${anio}-${mes}-${dia}`;
+
+}
+
+
+// Imprimir formulario
+
+function imprimirFormulario() {
+
+    window.print();
+
+}
+
+
+// Limpiar todos los campos
+
+function limpiarFormulario() {
+
+    const confirmar = confirm(
+        "¿Querés borrar todos los datos del formulario?"
+    );
+
+    if (!confirmar) return;
+
+    document.getElementById("destino").value = "";
+
+    document.getElementById("racks").value = "";
+
+    document.getElementById("motores").value = "";
+
+    document.getElementById("observaciones").value = "";
+
+    document.querySelectorAll(
+        'input[name="aprobacion"]'
+    ).forEach(opcion => {
+        opcion.checked = false;
+    });
+
+    cargarFecha();
+
+}
+
+
+// Iniciar
+
+cargarFecha();
+
+</script>
+
+</body>
+</html>
